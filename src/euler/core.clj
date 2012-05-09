@@ -6,17 +6,13 @@
 (defn p001 [m]
   (reduce + (filter #(or (multiple? % 3) (multiple? % 5)) (range m))))
 
-(defn fib [n]
-  (if (< n 2)
-      1
-      (+ (fib (- n 1)) (fib (- n 2)))))
-
-(defn fib-seq []
-  (range 20))
+(defn fib [a b]
+  (let [n (+ a b)]
+    (lazy-seq (cons n (fib b n)))))
 
 (defn p002 [m]
-  (reduce + (filter #(and (< % m) (multiple? % 2)) (fib-seq))))
+  (reduce + (filter even? (take-while #(< % m) (fib 0 1)))))
 
 (defn -main []
-  (p002 10))
+  (p002 4000000))
 
