@@ -26,14 +26,11 @@
   (let [s (str n)]
     (= s (apply str (reverse s)))))
 
-(defn range-digit [d]
-  (range (expt 10 (dec d)) (expt 10 d)))
+(defn mul [s e v]
+  (map #(* v %) (take-while #(< % v) (range s e))))
 
-(defn mul [d v]
-  (map #(* v %) (take-while #(< % v) (range-digit d))))
-
-(defn p004 [d]
-  (last (sort (filter palindromic? (flatten (map (partial mul d) (range-digit d)))))))
+(defn p004 [s e]
+  (last (sort (filter palindromic? (flatten (map (partial mul s e) (range s e)))))))
 
 (defn p005 [n]
   (reduce lcm (range 1 (inc n))))
@@ -47,6 +44,16 @@
 (defn p007 [n]
   (nth primes (dec n)))
 
+(defn to-num-seq [s]
+  (map #(- (int %) (int \0)) s))
+
+(defn p008 [s]
+  (loop [v 0
+         coll (to-num-seq s)]
+    (if (empty? coll)
+        v
+        (recur (max v (apply * (take 5 coll))) (rest coll)))))
+
 (defn -main []
-  (p007 10001))
+  nil)
 
