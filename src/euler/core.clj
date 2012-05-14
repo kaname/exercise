@@ -44,8 +44,11 @@
 (defn p007 [n]
   (nth primes (dec n)))
 
+(defn char-to-int [c]
+  (- (int c) (int \0)))
+
 (defn to-num-seq [s]
-  (map #(- (int %) (int \0)) s))
+  (map char-to-int s))
 
 (defn slice-dup [coll n]
   (lazy-seq
@@ -124,5 +127,20 @@
           [0 0]
           (range 1 1000000)))
 
+(defn factorial [n]
+  (loop [f 1
+         n n]
+    (if (< n 2)
+        f
+        (recur (* f n) (dec n)))))
+
+(defn p015 []
+  (apply * (cons (/ 1 (factorial 20))
+                 (range 21 41))))
+
+(defn p016 [e]
+  (reduce #(+ %1 (char-to-int %2)) 0 (str (reduce (fn [r _] (* r 2N)) 1N (range e)))))
+
 (defn -main []
-  (p014))
+  (p016 1000))
+
