@@ -167,6 +167,12 @@
      (count "one")
      (count "thousand")))
 
+(defn conv [c1 c2]
+  (map #(max (+ %1 %2) (+ %1 %3)) c2 c1 (rest c1)))
+
+(defn p018 [coll]
+  (first (reduce conv (reverse coll))))
+
 (defn -main []
-  (p017))
+  nil)
 
