@@ -1,6 +1,8 @@
 (ns euler.core
+  (:use clojure.java.io)
   (:use clojure.contrib.math)
-  (:use clojure.contrib.lazy-seqs))
+  (:use clojure.contrib.lazy-seqs)
+  (:use [clojure.string :only (split)]))
 
 (defn multiple? [n m]
   (zero? (rem n m)))
@@ -171,8 +173,15 @@
   (map #(max (+ %1 %2) (+ %1 %3)) c2 c1 (rest c1)))
 
 (defn p018 [coll]
-  (first (reduce conv (reverse coll))))
+  (first (reduce conv (rseq coll))))
+
+(defn split-num [s]
+  (map #(Integer/parseInt %) (split s #"\s")))
+
+(defn p067 [f]
+  (with-open [rdr (reader f)]
+    (first (reduce conv (reverse (map split-num (line-seq rdr)))))))
 
 (defn -main []
-  nil)
+  (p067 "triangle.txt"))
 
