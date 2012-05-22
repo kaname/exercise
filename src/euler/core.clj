@@ -182,6 +182,9 @@
   (with-open [rdr (reader f)]
     (first (reduce conv (reverse (map split-num (line-seq rdr)))))))
 
+(defn p020 [n]
+  (reduce #(+ %1 (char-to-int %2)) 0 (str (factorial n))))
+
 (defn -main []
-  (p067 "triangle.txt"))
+  (p020 100N))
 
