@@ -79,8 +79,9 @@
   (is (= 26 (p016 15))))
 
 (deftest test-p017
-  (is (= 20 (letters-1000 115)))
-  (is (= 23 (letters-1000 342))))
+  (is (= 20 (count-letter 115)))
+  (is (= 23 (count-letter 342)))
+  (is (= 21124 (p017 1000))))
 
 (deftest test-018
   (is (= 23 (p018 [[3] [7 4] [2 4 6] [8 5 9 3]])))

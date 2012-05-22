@@ -1,8 +1,8 @@
 (ns euler.core
+  (:require clojure.string)
   (:use clojure.java.io)
   (:use clojure.contrib.math)
-  (:use clojure.contrib.lazy-seqs)
-  (:use [clojure.string :only (split)]))
+  (:use clojure.contrib.lazy-seqs))
 
 (defn multiple? [n m]
   (zero? (rem n m)))
@@ -143,31 +143,42 @@
 (defn p016 [e]
   (reduce #(+ %1 (char-to-int %2)) 0 (str (reduce (fn [r _] (* r 2N)) 1N (range e)))))
 
-(defn letters-20 [n]
-  (count (nth ["" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten"
-               "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen"
-               "eighteen" "nineteen"] n)))
+(defn en-1-19 [n]
+  (nth ["" "one" "two" "three" "four" "five"
+        "six" "seven" "eight" "nine" "ten"
+        "eleven" "twelve" "thirteen" "fourteen" "fifteen"
+        "sixteen" "seventeen" "eighteen" "nineteen"] n))
 
-(defn letters-100 [n]
+(defn en-1-99 [n]
   (if (< n 20)
-      (letters-20 n)
-      (let [words ["twenty" "thirty" "forty" "fifty" "sixty" "seventy" "eighty" "ninety"]]
-        (+ (count (nth words (- (int (/ n 10)) 2)))
-           (letters-20 (rem n 10))))))
+      (en-1-19 n)
+      (let [ones (en-1-19 (rem n 10))
+            tens (nth ["" "" "twenty" "thirty" "forty" "fifty"
+                       "sixty" "seventy" "eighty" "ninety"] (int (/ n 10)))]
+        (if (empty? ones)
+            tens
+            (str tens "-" ones)))))
 
-(defn letters-1000 [n]
-  (+ (letters-20 (int (/ n 100)))
-     (count "hundred")
-     (if (multiple? n 100)
-         0
-         (+ (count "and")
-            (letters-100 (rem n 100))))))
+(defn en-1-999 [n]
+  (if (< n 100)
+      (en-1-99 n)
+      (let [hundreds (en-1-19 (int (/ n 100)))
+            tens (en-1-99 (rem n 100))]
+        (str hundreds
+             " hundred"
+             (if (or (empty? hundreds) (empty? tens)) "" " and ")
+             tens))))
 
-(defn p017 []
-  (+ (reduce + (map letters-100 (range 1 100)))
-     (reduce + (map letters-1000 (range 100 1000)))
-     (count "one")
-     (count "thousand")))
+(defn to-en [n]
+  (if (= n 1000)
+      "one thousand"
+      (en-1-999 n)))
+
+(defn count-letter [n]
+  (count (clojure.string/replace (to-en n) #"[\s-]" "")))
+
+(defn p017 [n]
+  (reduce #(+ %1 (count-letter %2)) 0 (range 1 (inc n))))
 
 (defn conv [c1 c2]
   (map #(max (+ %1 %2) (+ %1 %3)) c2 c1 (rest c1)))
@@ -176,7 +187,7 @@
   (first (reduce conv (rseq coll))))
 
 (defn split-num [s]
-  (map #(Integer/parseInt %) (split s #"\s")))
+  (map #(Integer/parseInt %) (clojure.string/split s #"\s")))
 
 (defn p067 [f]
   (with-open [rdr (reader f)]
@@ -186,5 +197,5 @@
   (reduce #(+ %1 (char-to-int %2)) 0 (str (factorial n))))
 
 (defn -main []
-  (p020 100N))
+  (p017 1000))
 
