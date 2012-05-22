@@ -78,3 +78,7 @@
 (deftest test-p016
   (is (= 26 (p016 15))))
 
+(deftest test-p017
+  (is (= 20 (letters-1000 115)))
+  (is (= 23 (letters-1000 342))))
+

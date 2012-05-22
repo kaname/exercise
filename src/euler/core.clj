@@ -141,6 +141,32 @@
 (defn p016 [e]
   (reduce #(+ %1 (char-to-int %2)) 0 (str (reduce (fn [r _] (* r 2N)) 1N (range e)))))
 
+(defn letters-20 [n]
+  (count (nth ["" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten"
+               "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen"
+               "eighteen" "nineteen"] n)))
+
+(defn letters-100 [n]
+  (if (< n 20)
+      (letters-20 n)
+      (let [words ["twenty" "thirty" "forty" "fifty" "sixty" "seventy" "eighty" "ninety"]]
+        (+ (count (nth words (- (int (/ n 10)) 2)))
+           (letters-20 (rem n 10))))))
+
+(defn letters-1000 [n]
+  (+ (letters-20 (int (/ n 100)))
+     (count "hundred")
+     (if (multiple? n 100)
+         0
+         (+ (count "and")
+            (letters-100 (rem n 100))))))
+
+(defn p017 []
+  (+ (reduce + (map letters-100 (range 1 100)))
+     (reduce + (map letters-1000 (range 100 1000)))
+     (count "one")
+     (count "thousand")))
+
 (defn -main []
-  (p016 1000))
+  (p017))
 
